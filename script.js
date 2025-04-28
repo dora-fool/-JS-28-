@@ -4,31 +4,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("contactForm");
   const contactDisplay = document.getElementById("contactDisplay");
 
-  // Загрузка и отображение сохраненных данных при загрузке страницы
   displaySavedContact();
 
-  // Обработчик отправки формы
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // Собираем данные формы
     const contact = {
       name: document.getElementById("name").value,
       phone: document.getElementById("phone").value,
       email: document.getElementById("email").value,
     };
 
-    // Сохраняем в LocalStorage как JSON
     localStorage.setItem("contactData", JSON.stringify(contact));
 
-    // Отображаем сохраненные данные
     displaySavedContact();
 
-    // Очищаем форму
     form.reset();
   });
 
-  // Функция для отображения сохраненных данных
   function displaySavedContact() {
     const savedData = localStorage.getItem("contactData");
 
@@ -57,29 +50,23 @@ document.addEventListener("DOMContentLoaded", function () {
   const expensesContainer = document.getElementById("expensesContainer");
   const totalAmountElement = document.getElementById("totalAmount");
 
-  // Загружаем расходы при загрузке страницы
   loadExpenses();
 
-  // Обработчик отправки формы
   expenseForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // Получаем данные из формы
     const expense = {
-      id: Date.now(), // Используем timestamp как уникальный ID
+      id: Date.now(),
       description: document.getElementById("description").value,
       amount: parseFloat(document.getElementById("amount").value),
       date: document.getElementById("date").value,
     };
 
-    // Добавляем расход в LocalStorage
     addExpense(expense);
 
-    // Очищаем форму
     expenseForm.reset();
   });
 
-  // Функция для добавления расхода
   function addExpense(expense) {
     let expenses = getExpenses();
     expenses.push(expense);
@@ -87,20 +74,18 @@ document.addEventListener("DOMContentLoaded", function () {
     loadExpenses();
   }
 
-  // Функция для получения всех расходов
   function getExpenses() {
     const expenses = localStorage.getItem("expenses");
     return expenses ? JSON.parse(expenses) : [];
   }
 
-  // Функция для удаления расхода
   function deleteExpense(id) {
     let expenses = getExpenses();
     expenses = expenses.filter((expense) => expense.id !== id);
     localStorage.setItem("expenses", JSON.stringify(expenses));
     loadExpenses();
   }
-  // Функция для загрузки и отображения расходов
+
   function loadExpenses() {
     const expenses = getExpenses();
     expensesContainer.innerHTML = "";
@@ -111,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Сортируем по дате (новые сверху)
     expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     let total = 0;
@@ -139,13 +123,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     totalAmountElement.textContent = `Общая сумма: ${total.toFixed(2)} ₽`;
   }
-  // Функция для форматирования даты
   function formatDate(dateString) {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("ru-RU", options);
   }
 
-  // Делаем функцию удаления доступной глобально
   window.deleteExpense = deleteExpense;
 });
 
@@ -155,21 +137,18 @@ document.addEventListener("DOMContentLoaded", function () {
   const timerElement = document.getElementById("timer");
   let seconds = 0;
 
-  // Проверяем, есть ли сохраненное время в sessionStorage
   const savedTime = sessionStorage.getItem("pageTime");
   if (savedTime) {
     seconds = parseInt(savedTime);
     updateTimerDisplay();
   }
 
-  // Запускаем таймер
   const timer = setInterval(function () {
     seconds++;
     sessionStorage.setItem("pageTime", seconds.toString());
     updateTimerDisplay();
   }, 1000);
 
-  // Обновляем отображение таймера
   function updateTimerDisplay() {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -180,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   }
 
-  // Очищаем таймер при закрытии страницы (необязательно)
   window.addEventListener("beforeunload", function () {
     clearInterval(timer);
   });
